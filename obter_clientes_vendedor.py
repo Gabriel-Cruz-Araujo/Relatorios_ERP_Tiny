@@ -126,10 +126,10 @@ def obter_dados_contato_por_cpf(cpf: str) -> str:
     #     return celular_contato, tipos_contato
     if tipos_contato:
         tipos_lista = [d['tipo'].strip().title() for d in tipos_contato]
-        tipos_str = ', '.join(tipos_lista)
+        tipos = ', '.join(tipos_lista)
         return {
             "celular_contato": celular_contato,
-            "tipos_str": tipos_str
+            "tipos_str": tipos
         }
 
     return {"celular_contato": None, "tipos_str": None}

@@ -39,7 +39,7 @@ def relatorio_cliente_vendedor():
         dados_complementares = obter_dados_contato_por_cpf(cpf_cnpj)
         if cpf_cnpj:
             celular = dados_complementares.get("celular_contato")
-            tipo = dados_complementares("tipos_str")
+            tipo = dados_complementares["tipos_str"]
         
         print(f"- {cliente}: Última compra em {ultima_data_str} "
               f"({dias_sem_compra} dias atrás) -> {status} - Tel: {telefone} - CPF/CNPJ: {dados_complementares} - Celular: {celular} - Tipos: {tipo}") 
