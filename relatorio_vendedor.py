@@ -2,8 +2,9 @@ import os
 import pandas as pd
 from datetime import datetime
 from dotenv import load_dotenv
-from obter_clientes_vendedor import obter_relatorio_cliente_vendedor
 from obter_clientes_vendedor import obter_dados_cliente_pedido
+from obter_clientes_vendedor import obter_dados_contato_por_cpf
+from obter_clientes_vendedor import obter_relatorio_cliente_vendedor
 
 load_dotenv()
 
@@ -35,23 +36,28 @@ def relatorio_cliente_vendedor():
             telefone = dados_cliente.get("telefone", "Não informado")
             cpf_cnpj = dados_cliente.get("cpf_cnpj", "Não informado")
         
-        print(f"- {cliente}: Última compra em {ultima_data_str} "
-              f"({dias_sem_compra} dias atrás) -> {status} - Tel: {telefone} - CPF/CNPJ: {cpf_cnpj}") 
-
-        dados_para_df.append({
-            "Nome": cliente,
-            "Última compra": ultima_data_str,
-            "Dias sem compra": dias_sem_compra,
-            "Situação": status,
-            "Telefone": telefone,
-            "Cpf/Cnpj": cpf_cnpj
-        })
+        dados_complementares = obter_dados_contato_por_cpf(cpf_cnpj)
+        if cpf_cnpj:
+            celular = dados_complementares.get("celular_contato")
+            tipo = dados_complementares("tipos_str")
         
-    print("🤖 Transformando esses dados em um arquivo no excell ...")
-    df = pd.DataFrame(dados_para_df)
+        print(f"- {cliente}: Última compra em {ultima_data_str} "
+              f"({dias_sem_compra} dias atrás) -> {status} - Tel: {telefone} - CPF/CNPJ: {dados_complementares} - Celular: {celular} - Tipos: {tipo}") 
+
+    #     dados_para_df.append({
+    #         "Nome": cliente,
+    #         "Última compra": ultima_data_str,
+    #         "Dias sem compra": dias_sem_compra,
+    #         "Situação": status,
+    #         "Telefone": telefone,
+    #         "Cpf/Cnpj": cpf_cnpj
+    #     })
+        
+    # print("🤖 Transformando esses dados em um arquivo no excell ...")
+    # df = pd.DataFrame(dados_para_df)
     
-    df.to_excel("relatorio_clientes_vendedor_katlen.xlsx", index=False)
-    print("Arquivo Excel criado: relatorio_clientes_vendedor.xlsx")
+    # df.to_excel("relatorio_clientes_vendedor_katlen.xlsx", index=False)
+    # print("Arquivo Excel criado: relatorio_clientes_vendedor.xlsx")
    
     
     
