@@ -1,4 +1,4 @@
-from relatorio_vendedor import relatorio_cliente_vendedor
+from src.relatorios.relatorio_vendedor import relatorio_cliente_vendedor
 
 
 relatorio_cliente_vendedor()
