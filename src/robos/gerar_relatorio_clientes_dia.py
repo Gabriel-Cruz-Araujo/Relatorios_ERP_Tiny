@@ -112,6 +112,3 @@ def gerar_relatorios_cliente_dia():
     
     time.sleep(15)
     driver.quit()
-
-
-gerar_relatorios_cliente_dia()

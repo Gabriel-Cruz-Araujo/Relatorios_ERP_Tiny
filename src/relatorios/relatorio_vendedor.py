@@ -70,4 +70,3 @@ def relatorio_cliente_vendedor():
    
     
     
-relatorio_cliente_vendedor()
