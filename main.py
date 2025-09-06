@@ -1,4 +1,5 @@
 from src.relatorios.relatorio_vendedor import relatorio_cliente_vendedor
+from src.robos.gerar_relatorio_clientes_dia import gerar_relatorios_cliente_dia
 
-
-relatorio_cliente_vendedor()
+# relatorio_cliente_vendedor()
+gerar_relatorios_cliente_dia()
