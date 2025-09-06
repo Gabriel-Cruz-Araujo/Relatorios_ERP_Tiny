@@ -2,9 +2,11 @@ import os
 import glob
 import pandas as pd
 from datetime import datetime, timedelta
+from src.robos.gerar_relatorio_clientes_dia import gerar_relatorios_cliente_dia
 
 #E
 def extraindo_ultimo_arquivo_dowloads():
+    gerar_relatorios_cliente_dia()
     lista_arquivos = glob.glob("C:/Users/equip/Downloads/*")
     ultimo_arquivo_dowload = max(lista_arquivos, key=os.path.getmtime)
     print(ultimo_arquivo_dowload)

@@ -9,10 +9,15 @@ from src.api.obter_clientes_vendedor import obter_relatorio_cliente_vendedor
 
 load_dotenv()
 
-def relatorio_cliente_vendedor():
+def relatorio_cliente_vendedor(escolha_vendedor):
     
-    id_vendedor = os.getenv("ID_VENDEDOR_V")
-    
+    if escolha_vendedor == 1:
+        id_vendedor = os.getenv("ID_VENDEDOR_V")
+    elif escolha_vendedor == 2:
+        id_vendedor = os.getenv("ID_VENDEDOR_K")
+    elif escolha_vendedor == 3:
+        id_vendedor = os.getenv("ID_VENDEDOR_G")
+        
     clientes = obter_relatorio_cliente_vendedor(id_vendedor)
     print("Clientes e data da última compra:")
     
