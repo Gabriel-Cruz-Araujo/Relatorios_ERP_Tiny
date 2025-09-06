@@ -2,10 +2,11 @@ import os
 import time
 from selenium import webdriver
 from dotenv import load_dotenv
-from login_kommo import login_kommo
+from src.utils.login_kommo import login_kommo
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -93,14 +94,24 @@ def gerar_relatorios_cliente_dia():
     export_btn.click()
     time.sleep(3) 
         
-    dropdown_filters = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[10]/div[1]/div/div/div[2]/label[1]/div[2]/div[3]/button")))
+    dropdown_filters = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "label.modal-export__format:nth-child(2) > div:nth-child(2) > div:nth-child(3) > button:nth-child(2)")))
     dropdown_filters.click()
     
+    dropdown_filters_aplicado = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "label.modal-export__format:nth-child(2) > div:nth-child(2) > div:nth-child(3) > ul:nth-child(1) > li:nth-child(2) > span:nth-child(1)")))
+    dropdown_filters_aplicado.click()
     
+    export_btn = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "button.button-input_blue:nth-child(2)")))
+    export_btn.click()
+    time.sleep(10)
     
+    try:
+        download_btn = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[13]/div[1]/div/div/div[2]/a/button")))
+        download_btn.click()
+    except TimeoutException:
+        print("Nenhum poupup encontrado")
     
-    
-    time.sleep(500)
+    time.sleep(15)
+    driver.quit()
 
 
 gerar_relatorios_cliente_dia()
