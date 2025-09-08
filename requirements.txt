@@ -3,5 +3,6 @@ dotenv == 0.9.9
 pandas == 2.3.0
 openpyxl == 3.1.5
 Selenium == 4.35.0
-rich
-PyQt6
+rich == 14.1.0
+PyQt6 == 6.9.1
+pyinstaller == 6.15.0
