@@ -25,7 +25,7 @@ class MenuApp(QWidget):
         self.title_label.setStyleSheet("font-size: 22px; font-weight: bold;")
         layout.addWidget(self.title_label)
 
-        # Botões menores e centralizados
+        
         self.btn_rel_vendedor = QPushButton("Relatório Clientes por Vendedor")
         self.btn_rel_vendedor.setFixedSize(300, 40)
         self.btn_rel_vendedor.clicked.connect(self.relatorio_vendedor_ui)

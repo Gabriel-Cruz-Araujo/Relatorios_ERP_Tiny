@@ -69,9 +69,25 @@ def relatorio_cliente_vendedor(escolha_vendedor):
         
     print("🤖 Transformando esses dados em um arquivo no excell ...")
     df = pd.DataFrame(dados_para_df)
+        
+        # Caminho da pasta "Documentos" do usuário
+    documentos = os.path.expanduser("~/Documents")  # Funciona em Windows, Linux e Mac
+
+    # Pasta "relatorios" dentro de Documentos
+    pasta_relatorios = os.path.join(documentos, "relatorios")
+
+    # Cria a pasta se não existir
+    os.makedirs(pasta_relatorios, exist_ok=True)
     
-    df.to_excel("relatorio_clientes_vendedor_Vanessa.xlsx", index=False)
-    print("Arquivo Excel criado: relatorio_clientes_vendedor.xlsx")
+    if escolha_vendedor == 1:
+        arquivo = os.path.join(pasta_relatorios, "relatorio_clientes_vendedor_Vanessa.xlsx")
+    elif escolha_vendedor == 2:
+        arquivo = os.path.join(pasta_relatorios, "relatorio_clientes_vendedor_Katllen.xlsx")
+    elif escolha_vendedor == 3:
+        arquivo = os.path.join(pasta_relatorios, "relatorio_clientes_vendedor_Gabriel.xlsx")
+        
+    df.to_excel(arquivo, index=False)
+    print(f"Arquivo Excel criado: {arquivo}")
     
 if __name__ == "__main__":
     relatorio_cliente_vendedor()    
