@@ -1,17 +1,30 @@
 import sys
 import os
 from PyQt6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QPushButton, QLabel,
+    QWidget, QVBoxLayout, QPushButton, QLabel,
     QComboBox, QMessageBox, QListWidget
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QSize
 from PyQt6.QtGui import QMovie
+from dotenv import load_dotenv
 from src.relatorios.relatorio_vendedor import relatorio_cliente_vendedor
 from src.utils.enviar_email import enviar_para_email
 from src.ETL.processamento import processando_planilha
 
+# Caminho base para PyInstaller
+if getattr(sys, 'frozen', False):
+    base_path = sys._MEIPASS
+else:
+    base_path = os.path.abspath(".")
+
+# Carregar .env
+load_dotenv(os.path.join(base_path, ".env"))
+
+# Caminho do GIF
+caminho_gif = os.path.join(base_path, "loading.gif")
+
 class WorkerThread(QThread):
-    finished = pyqtSignal(str)  # sinal emitido quando terminar
+    finished = pyqtSignal(str)
 
     def __init__(self, func, *args):
         super().__init__()
@@ -40,7 +53,7 @@ class MenuApp(QWidget):
         self.title_label.setStyleSheet("font-size: 22px; font-weight: bold; color: #333;")
         self.layout.addWidget(self.title_label)
 
-        # Botões principais estilizados
+        # Botões principais
         button_style = """
             QPushButton {
                 background-color: #8d779d; 
@@ -86,12 +99,12 @@ class MenuApp(QWidget):
         self.btn_gerar_vendedor.setVisible(False)
         self.layout.addWidget(self.btn_gerar_vendedor, alignment=Qt.AlignmentFlag.AlignHCenter)
 
-        # Ampulheta animada (GIF menor e centralizado)
+        # GIF Ampulheta
         self.loading_label = QLabel()
         self.loading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.loading_label.setVisible(False)
-        self.movie = QMovie("C:/Users/equip/Documents/dev/Relatórios/src/gifs/load-33_256.gif")  # Coloque seu GIF aqui
-        self.movie.setScaledSize(QSize(64, 64))  
+        self.movie = QMovie(caminho_gif)
+        self.movie.setScaledSize(QSize(64, 64))
         self.loading_label.setMovie(self.movie)
         self.layout.addWidget(self.loading_label, alignment=Qt.AlignmentFlag.AlignHCenter)
 
@@ -107,28 +120,23 @@ class MenuApp(QWidget):
         self.pasta_relatorios = os.path.join(documentos, "relatorios")
         os.makedirs(self.pasta_relatorios, exist_ok=True)
 
-    # Mostrar ComboBox e botão para gerar relatório
     def mostrar_vendedor_opcoes(self):
         self.combo_vendedor.setVisible(True)
         self.btn_gerar_vendedor.setVisible(True)
 
-    # Iniciar thread para gerar relatório de vendedor
     def iniciar_relatorio_vendedor(self):
         escolha = self.combo_vendedor.currentIndex() + 1
         nomes = {1: "Vanessa", 2: "Katllen", 3: "Gabriel"}
         nome_arquivo = f"relatorio_clientes_vendedor_{nomes[escolha]}.xlsx"
         caminho_arquivo = os.path.join(self.pasta_relatorios, nome_arquivo)
 
-        # Mostrar ampulheta
         self.loading_label.setVisible(True)
         self.movie.start()
 
-        # Criar e iniciar thread
         self.thread = WorkerThread(relatorio_cliente_vendedor, escolha)
         self.thread.finished.connect(lambda msg: self.terminou_relatorio(msg, caminho_arquivo))
         self.thread.start()
 
-    # Finalização do relatório por vendedor
     def terminou_relatorio(self, msg, caminho_arquivo):
         self.movie.stop()
         self.loading_label.setVisible(False)
@@ -137,20 +145,15 @@ class MenuApp(QWidget):
         self.combo_vendedor.setVisible(False)
         self.btn_gerar_vendedor.setVisible(False)
 
-    # Relatório do dia anterior
     def relatorio_dia(self):
         QMessageBox.information(self, "Processando", "⏳ Processando planilha...")
-
-        # Mostrar ampulheta
         self.loading_label.setVisible(True)
         self.movie.start()
 
-        # Criar e iniciar thread
         self.thread = WorkerThread(self.processar_dia)
         self.thread.finished.connect(lambda msg: self.terminou_dia(msg))
         self.thread.start()
 
-    # Função que processa planilha e envia e-mail
     def processar_dia(self):
         processando_planilha()
         enviar_para_email()
@@ -160,10 +163,3 @@ class MenuApp(QWidget):
         self.loading_label.setVisible(False)
         QMessageBox.information(self, "Sucesso", "Planilha processada e enviada com sucesso! 📧")
         self.lista_relatorios.addItem(os.path.join(self.pasta_relatorios, "Última planilha processada"))
-
-# Main
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MenuApp()
-    window.show()
-    sys.exit(app.exec())
