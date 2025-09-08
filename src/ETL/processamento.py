@@ -82,5 +82,6 @@ def processando_planilha():
     df.to_excel(caminho_arquivo, index=False)
     
     print(f"Planilha salva em: {caminho_arquivo}")
-    
-processando_planilha()
+
+if __name__ == "__main__":
+    processando_planilha()

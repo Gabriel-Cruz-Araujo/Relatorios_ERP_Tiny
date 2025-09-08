@@ -72,6 +72,9 @@ def relatorio_cliente_vendedor(escolha_vendedor):
     
     df.to_excel("relatorio_clientes_vendedor_Vanessa.xlsx", index=False)
     print("Arquivo Excel criado: relatorio_clientes_vendedor.xlsx")
+    
+if __name__ == "__main__":
+    relatorio_cliente_vendedor()    
    
     
     

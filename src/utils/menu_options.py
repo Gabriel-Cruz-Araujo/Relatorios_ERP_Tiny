@@ -32,4 +32,6 @@ def menu():
                 break
             case _:
                 print("Opção inválida! Tente novamente.")
-menu()
+                
+if __name__ == "__main__":
+    menu()
