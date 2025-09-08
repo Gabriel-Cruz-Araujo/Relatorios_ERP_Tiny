@@ -1,5 +1,6 @@
 import os
 import glob
+import smtplib
 import pandas as pd
 from datetime import datetime, timedelta
 from src.robos.gerar_relatorio_clientes_dia import gerar_relatorios_cliente_dia
@@ -13,7 +14,7 @@ def extraindo_ultimo_arquivo_dowloads():
     df = pd.read_excel(ultimo_arquivo_dowload)
     return df
     
-#T and L
+#T and L(a carga esta sendo feita pela função enviar_email() no diretorio utils)
 def processando_planilha():
     df = extraindo_ultimo_arquivo_dowloads()
     
@@ -82,6 +83,9 @@ def processando_planilha():
     df.to_excel(caminho_arquivo, index=False)
     
     print(f"Planilha salva em: {caminho_arquivo}")
+
+
+
 
 if __name__ == "__main__":
     processando_planilha()
