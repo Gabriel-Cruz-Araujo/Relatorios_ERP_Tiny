@@ -1,0 +1,3 @@
+from src.relatorios.relatorio_vendedor import relatorio_vendedores_autom
+
+relatorio_vendedores_autom()
