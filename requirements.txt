@@ -7,3 +7,4 @@ xlsxwriter
 pyautogui
 streamlit
 plotly
+streamlit-option-menu
