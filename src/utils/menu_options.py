@@ -1,6 +1,6 @@
 from src.utils.enviar_email import enviar_para_email
 from src.ETL.processamento import processando_planilha
-from src.robos.gerar_vendas_ganhas import vendas_ganhas
+from gerar_vendas_ganhas import vendas_ganhas
 from src.relatorios.relatorio_vendedor import relatorio_cliente_vendedor
 from src.robos.gerar_relatorio_clientes_dia import gerar_relatorios_cliente_dia
 from src.relatorios.relatorio_pedidos_de_venda_diario import relatorio_pdv_diario

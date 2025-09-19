@@ -2,6 +2,7 @@ import os
 import time
 from selenium import webdriver
 from dotenv import load_dotenv
+import pyautogui
 from selenium.webdriver.common.keys import Keys
 from src.utils.login_kommo import login_kommo
 from selenium.webdriver.common.by import By
@@ -56,8 +57,9 @@ def vendas_ganhas():
     time.sleep(10)
     
     try:
-        download_btn = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[11]/div[1]/div/div/div[2]/a")))
+        download_btn = driver.find_element(by=By.CSS_SELECTOR, value=".modal-export__save-button")
         download_btn.click()
+        time.sleep(5)
     except TimeoutException:
         print("Nenhum poupup encontrado")
     
@@ -67,20 +69,21 @@ def vendas_ganhas():
     while True:
         try:
             time.sleep(5)
-            first_lead = driver.find_element(By.XPATH, "(//a[@class='js-navigate-link list-row__template-name__table-wrapper__name-link'])[1]")
+            first_lead = driver.find_element(by = By.XPATH, value="(//a[@class='js-navigate-link list-row__template-name__table-wrapper__name-link'])[1]")
             first_lead.click()
-            time.sleep(2)
+            time.sleep(7)
             
             qualify_lead = driver.find_element(by=By.XPATH, value="/html/body/div[7]/div[1]/div[2]/div[1]/div[1]/div[1]/form/div/div[1]/div[3]/div/div/div[1]/div/div/div/div[1]")
             qualify_lead.click()
-            time.sleep(3)
+            time.sleep(7)
             
-            base_leads = driver.find_element(By.XPATH, value="/html/body/div[11]/div[1]/div/div[2]")
+            base_leads = driver.find_element(by=By.CSS_SELECTOR, value="div.pipeline-select:nth-child(5) > label:nth-child(1)")
             base_leads.click()
+            time.sleep(7)
                 
-            send_to_hopper = driver.find_element(by=By.CSS_SELECTOR, value="/html/body/div[11]/div[1]/div/div[2]/ul/li[8]")
+            send_to_hopper = driver.find_element(by=By.XPATH, value="/html/body/div[12]/div[1]/div/div[2]/ul/li[8]")
             send_to_hopper.click()
-            time.sleep(3)
+            time.sleep(7)
                 
             
             save_changes = driver.find_element(by=By.XPATH, value="/html/body/div[7]/div[1]/div[2]/div[1]/div[2]/button[1]/span/span")    
