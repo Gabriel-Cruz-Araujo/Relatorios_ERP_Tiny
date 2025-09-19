@@ -5,3 +5,5 @@ openpyxl == 3.1.5
 Selenium == 4.35.0
 xlsxwriter
 pyautogui
+streamlit
+plotly
