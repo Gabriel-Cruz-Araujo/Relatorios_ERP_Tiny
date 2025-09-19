@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 from dotenv import load_dotenv
 from collections import defaultdict
@@ -11,6 +12,11 @@ url_busca_pedidos_id = "https://api.tiny.com.br/api2/pedido.obter.php"
 
 
 def obter_relatorio_cliente_vendedor(vendedor_id, formato="JSON"):
+    """
+    Obtem o id do vendedor e retorna seus clientes com 
+    as informações dos pedidos.
+    
+    """
     pagina = 1
     clientes_compras = defaultdict(list)
 
@@ -23,6 +29,7 @@ def obter_relatorio_cliente_vendedor(vendedor_id, formato="JSON"):
         }
 
         response = requests.post(url_busca, data=payload)
+        time.sleep(1)
         data = response.json()
 
         if "retorno" not in data or data["retorno"]["status"] != "OK":
@@ -56,6 +63,11 @@ def obter_relatorio_cliente_vendedor(vendedor_id, formato="JSON"):
     return clientes_ultima_compra
 
 def obter_dados_cliente_pedido(id_pedido, formato="JSON"):
+    """
+    Recebe o Id do pedido e retorna as informações 
+    mais detalhadas.
+    
+    """
     payload = {
         "token": TOKEN,
         "id": id_pedido,
@@ -63,6 +75,7 @@ def obter_dados_cliente_pedido(id_pedido, formato="JSON"):
     }
 
     response = requests.post(url_busca_pedidos_id, data=payload)
+    time.sleep(0.5)
     data = response.json()
 
     if "retorno" not in data or data["retorno"]["status"] != "OK":
@@ -94,6 +107,7 @@ def obter_dados_contato_por_cpf(cpf: str) -> str:
     url_busca = "https://api.tiny.com.br/api2/contatos.pesquisa.php"
     params_busca = {"cpf_cnpj": cpf, "token": TOKEN, "formato": "json"}
     response_busca = requests.get(url_busca, params=params_busca)
+    time.sleep(0.5)
 
     if response_busca.status_code != 200:
         print(f"Erro ao buscar cliente: {response_busca.status_code} {response_busca.text}")
@@ -116,14 +130,11 @@ def obter_dados_contato_por_cpf(cpf: str) -> str:
         return "Não definido"
 
     dados_detalhe = response_detalhe.json()
-    # print(dados_detalhe)
     contato = dados_detalhe.get("retorno", {}).get("contato", {})
     tipos_contato = contato.get("tipos_contato", [])
     celular_contato = contato.get("celular")
     
     
-    # if tipos_contato:
-    #     return celular_contato, tipos_contato
     if tipos_contato:
         tipos_lista = [d['tipo'].strip().title() for d in tipos_contato]
         tipos = ', '.join(tipos_lista)
@@ -137,19 +148,19 @@ def obter_dados_contato_por_cpf(cpf: str) -> str:
     
 
 
-if __name__ == "__main__":
-    # id_vendedor = "711131091"
-    # clientes = obter_relatorio_cliente_vendedor(id_vendedor)
-    # print("Clientes, última compra e ID do pedido:")
-    # for cliente, dados in clientes.items():
-    #     print(f"- {cliente}: Última compra em {dados['data_pedido']} (Pedido ID: {dados['id_pedido']})")
+# if __name__ == "__main__":
+#     # id_vendedor = ""
+#     # clientes = obter_relatorio_cliente_vendedor(id_vendedor)
+#     # print("Clientes, última compra e ID do pedido:")
+#     # for cliente, dados in clientes.items():
+#     #     print(f"- {cliente}: Última compra em {dados['data_pedido']} (Pedido ID: {dados['id_pedido']})")
 
-    # id_pedido_teste = ""
-    # dados = obter_dados_cliente_pedido(id_pedido_teste)
-    # if dados:
-    #     print(f"Pedido {dados['id_pedido']}: {dados['cliente']} - Tel: {dados['telefone']} - CPF/CNPJ {dados['cpf_cnpj']}")
+#     # id_pedido_teste = ""
+#     # dados = obter_dados_cliente_pedido(id_pedido_teste)
+#     # if dados:
+#     #     print(f"Pedido {dados['id_pedido']}: {dados['cliente']} - Tel: {dados['telefone']} - CPF/CNPJ {dados['cpf_cnpj']}")
 
-    cpf_cliente = "027.652.374-17"
-    dados_cliente = obter_dados_contato_por_cpf(cpf_cliente)
-    print(dados_cliente)
+#     cpf_cliente = ""
+#     dados_cliente = obter_dados_contato_por_cpf(cpf_cliente)
+#     print(dados_cliente)
 

@@ -3,7 +3,10 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-
+"""
+Código para obter os ids de todos
+os vendedores cadastrados no sistema.
+"""
 API_URL = "https://api.tiny.com.br/api2/vendedores.pesquisa.php"
 TOKEN = os.getenv("TOKEN_API_TINY")
 

@@ -1,14 +1,24 @@
-from src.relatorios.relatorio_vendedor import relatorio_cliente_vendedor
-from src.robos.gerar_relatorio_clientes_dia import gerar_relatorios_cliente_dia
 from src.utils.enviar_email import enviar_para_email
 from src.ETL.processamento import processando_planilha
+from src.robos.gerar_vendas_ganhas import vendas_ganhas
+from src.relatorios.relatorio_vendedor import relatorio_cliente_vendedor
+from src.robos.gerar_relatorio_clientes_dia import gerar_relatorios_cliente_dia
+from src.relatorios.relatorio_pedidos_de_venda_diario import relatorio_pdv_diario
+
 
 
 def menu():
+    """
+    Função para gerar o Menu do sistema 
+    com as opções selecionadas.
+    
+    """
     while True:
         print("\n=== MENU ===")
         print("1 - Relatório Clientes por Vendedor")
         print("2 - Relatório Clientes Trabalhados no Dia Anterior")
+        print("3 - Relatório Vendas Ganhas")
+        print("4 - Relatório Caixa")
         print("0 - Sair")
             
         opcao = input("Escolha uma opção: ")
@@ -25,7 +35,7 @@ def menu():
                     
                     if escolha_vendedor in [1, 2, 3]:
                         relatorio_cliente_vendedor(escolha_vendedor)
-                        break  # Sai do loop interno e volta para o menu
+                        break  
                     elif escolha_vendedor == 4:
                         break
                     else:
@@ -33,6 +43,11 @@ def menu():
             case "2":
                 processando_planilha()
                 enviar_para_email()
+            case "3":
+                vendas_ganhas()
+            case "4":
+                data = input("Digite a data que deseja tirar o caixa: ")
+                relatorio_pdv_diario(data)
             case "0":
                 print("Saindo do programa...")
                 break

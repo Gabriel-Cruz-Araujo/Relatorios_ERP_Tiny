@@ -7,6 +7,11 @@ from src.robos.gerar_relatorio_clientes_dia import gerar_relatorios_cliente_dia
 
 #E
 def extraindo_ultimo_arquivo_dowloads():
+    """
+    Extração do último arquivo da pasta dowloads 
+    do sistema
+    
+    """
     gerar_relatorios_cliente_dia()
     lista_arquivos = glob.glob("C:/Users/equip/Downloads/*")
     ultimo_arquivo_dowload = max(lista_arquivos, key=os.path.getmtime)
@@ -16,6 +21,11 @@ def extraindo_ultimo_arquivo_dowloads():
     
 #T and L(a carga esta sendo feita pela função enviar_email() no diretorio utils)
 def processando_planilha():
+    """
+    Realizando uma limpeza(processamento) na planilha
+    removendo colunas desnecessárias.
+    
+    """
     df = extraindo_ultimo_arquivo_dowloads()
     
     colunas_excluir = [
@@ -67,11 +77,8 @@ def processando_planilha():
     ]
     
     df = df.drop(columns=colunas_excluir, errors="ignore")
-    
     df['Ult.Interação'] = pd.to_datetime(df['Ult.Interação'], dayfirst=True)
-    
     df['Ultima intereção'] = df['Ult.Interação'].dt.strftime("%d/%m/%Y")
-    
     print(df)
 
     pasta_saida = ("C:/Users/equip/Documents/dev/planilhas/contatos_trabalhados_diario")

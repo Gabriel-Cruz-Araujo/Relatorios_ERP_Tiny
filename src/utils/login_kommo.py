@@ -10,6 +10,12 @@ from selenium.webdriver.support import expected_conditions as EC
 load_dotenv()
 
 def login_kommo(kommo_user, kommo_password, driver):
+    """
+    Função para ser reutilizada, a função
+    serve para fazer o login automaticamente na 
+    kommo e se tiver um poupup fecha-lo.
+    
+    """
     login_username_kommo = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div[1]/div/div[1]/span/input")))
     login_username_kommo.send_keys(kommo_user)
     
