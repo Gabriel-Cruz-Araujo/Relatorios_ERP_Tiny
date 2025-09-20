@@ -2,6 +2,7 @@ import os
 import time
 import requests
 from dotenv import load_dotenv
+from datetime import datetime
 from collections import defaultdict
 
 load_dotenv()
@@ -11,11 +12,41 @@ url_busca = "https://api.tiny.com.br/api2/pedidos.pesquisa.php"
 url_busca_pedidos_id = "https://api.tiny.com.br/api2/pedido.obter.php"
 
 
+
+def requisicao_com_retry(payload, tentativas=5, delay=5):
+    """
+    Faz a requisição POST com retry em caso de erro ou bloqueio da API.
+    """
+    for i in range(tentativas):
+        try:
+            response = requests.post(url_busca, data=payload)
+            data = response.json()
+        except Exception as e:
+            print(f"Erro de requisição: {e}")
+            time.sleep(delay)
+            continue
+
+        # API bloqueada
+        if "retorno" in data:
+            erros = data["retorno"].get("erros", [])
+            if any("API Bloqueada" in str(e.get("erro", "")) for e in erros):
+                print("API bloqueada. Aguardando 60 segundos...")
+                time.sleep(60)
+                continue
+
+            if data["retorno"].get("status") == "OK":
+                return data
+
+        print(f"Tentativa {i+1} falhou: {data}")
+        time.sleep(delay)
+
+    return None
+
+
 def obter_relatorio_cliente_vendedor(vendedor_id, formato="JSON"):
     """
-    Obtem o id do vendedor e retorna seus clientes com 
-    as informações dos pedidos.
-    
+    Obtém o id do vendedor e retorna seus clientes com 
+    as informações dos pedidos (última compra).
     """
     pagina = 1
     clientes_compras = defaultdict(list)
@@ -28,12 +59,9 @@ def obter_relatorio_cliente_vendedor(vendedor_id, formato="JSON"):
             "pagina": pagina
         }
 
-        response = requests.post(url_busca, data=payload)
-        time.sleep(1)
-        data = response.json()
-
-        if "retorno" not in data or data["retorno"]["status"] != "OK":
-            print(f"Erro na página {pagina}: {data}")
+        data = requisicao_com_retry(payload, tentativas=5, delay=2)
+        if not data:
+            print(f"Não foi possível obter dados da página {pagina}. Pulando...")
             break
 
         pedidos = data["retorno"].get("pedidos", [])
@@ -52,12 +80,16 @@ def obter_relatorio_cliente_vendedor(vendedor_id, formato="JSON"):
                     "data_pedido": data_pedido
                 })
 
-        pagina += 1  # próxima página
+        pagina += 1
+        time.sleep(1)  # espera entre páginas
 
-    # pega a última compra de cada cliente
+    # Pega a última compra de cada cliente convertendo a data
     clientes_ultima_compra = {}
     for cliente, compras in clientes_compras.items():
-        ultima_compra = max(compras, key=lambda x: x["data_pedido"])
+        ultima_compra = max(
+            compras,
+            key=lambda x: datetime.strptime(x["data_pedido"], "%d/%m/%Y")
+        )
         clientes_ultima_compra[cliente] = ultima_compra
 
     return clientes_ultima_compra
