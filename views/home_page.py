@@ -166,7 +166,15 @@ def pagina_inicial():
         df_pizza,
         names='Forma de Pagamento',
         values='Total do Pedido',
-        title="Distribuição por Forma de Pagamento"
+        title="Distribuição por Forma de Pagamento",
+        color='Forma de Pagamento',
+        color_discrete_map={
+            "Cartão": "#2E86C1",       # azul escuro
+            "Dinheiro": "#28B463",     # verde
+            "PIX": "#F39C12",          # laranja
+            "Boleto": "#8E44AD",       # roxo
+            "Não informado": "#95A5A6" # cinza
+        }
     )
     chart_col2.plotly_chart(fig_pie, use_container_width=True)
 
