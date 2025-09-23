@@ -1,6 +1,8 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 from views.home_page import pagina_inicial
+from views.vendedores import pagina_vendedor_1, pagina_vendedor_2, pagina_vendedor_3
+
 
 # Configuração da página
 st.set_page_config(
@@ -21,7 +23,7 @@ with st.sidebar:
         default_index=0,
         styles={
             "container": {"padding": "5px", "background-color": "#524E4E"},  # fundo do menu
-            "icon": {"color": "#8B5CF6", "font-size": "20px"},  # ícones roxo suave
+            "icon": {"color": "#FFFFFF", "font-size": "20px"},  # ícones roxo suave
             "nav-link": {
                 "font-size": "16px",
                 "text-align": "left",
@@ -42,8 +44,11 @@ if selected == "Página Inicial":
     st.title("Extratos da Terra")
     pagina_inicial()
 elif selected == "Vanessa":
-    st.title("Relatório Vanessa")
+    st.title("Extratos da Terra")
+    pagina_vendedor_1()
 elif selected == "Katllen":
-    st.title("Relatório Katllen")
+    st.title("Extratos da Terra")
+    pagina_vendedor_2()
 elif selected == "Gabriel":
-    st.title("Relatório Gabriel")
+    st.title("Extratos da Terra")
+    pagina_vendedor_3()

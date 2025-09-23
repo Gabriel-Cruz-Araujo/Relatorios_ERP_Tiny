@@ -8,3 +8,4 @@ pyautogui
 streamlit
 plotly
 streamlit-option-menu
+matplotlib
